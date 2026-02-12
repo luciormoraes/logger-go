@@ -3,6 +3,7 @@ package pocketlog
 import (
 	"fmt"
 	"io"
+	"os"
 )
 
 // Logger is used to log information.
@@ -12,11 +13,14 @@ type Logger struct {
 }
 
 // New returns you a logger, ready to log at the required threshold.
-func New(threshold Level, output io.Writer) *Logger {
-	return &Logger{
-		threshold: threshold,
-		output:    output,
+// Give it a list of configuration functions to tune it at your will.
+// The default output is Stdout.
+func New(threshold Level, opts ...Option) *Logger {
+	lgr := &Logger{threshold: threshold, output: os.Stdout}
+	for _, configFunc := range opts {
+		configFunc(lgr)
 	}
+	return lgr
 }
 
 // Debugf formats and prints a message if the log level is debug or higher.
@@ -43,6 +47,8 @@ func (l *Logger) Errorf(format string, args ...any) {
 	l.logf(format, args...)
 }
 
+// logf prints the message to the output.
+// Add decorations here, if any.
 func (l *Logger) logf(format string, args ...any) {
 	_, _ = fmt.Fprintf(l.output, format+"\n", args...)
 }
