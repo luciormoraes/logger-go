@@ -28,7 +28,7 @@ func (l *Logger) Debugf(format string, args ...any) {
 	if l.threshold > LevelDebug {
 		return
 	}
-	l.logf(format, args...)
+	l.logf(LevelDebug, format, args...)
 }
 
 // Infof formats and prints a message if the log level is info or higher.
@@ -36,7 +36,7 @@ func (l *Logger) Infof(format string, args ...any) {
 	if l.threshold > LevelInfo {
 		return
 	}
-	l.logf(format, args...)
+	l.logf(LevelInfo, format, args...)
 }
 
 // Errorf formats and prints a message if the log level is error or higher.
@@ -44,11 +44,12 @@ func (l *Logger) Errorf(format string, args ...any) {
 	if l.threshold > LevelError {
 		return
 	}
-	l.logf(format, args...)
+	l.logf(LevelError, format, args...)
 }
 
 // logf prints the message to the output.
 // Add decorations here, if any.
-func (l *Logger) logf(format string, args ...any) {
-	_, _ = fmt.Fprintf(l.output, format+"\n", args...)
+func (l *Logger) logf(lvl Level, format string, args ...any) {
+	message := fmt.Sprintf(format, args...)
+	_, _ = fmt.Fprintf(l.output, "%s %s\n", lvl, message)
 }

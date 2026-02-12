@@ -1,5 +1,8 @@
 package pocketlog
 
+// Level represents an available logging level.
+type Level byte
+
 const (
 	// LevelDebug represents the lowest level of log, mostly used for
 	// debugging purposes.
@@ -12,5 +15,17 @@ const (
 	LevelError
 )
 
-// Level represents an available logging level.
-type Level byte
+// String implements the fmt.Stringer interface
+func (lvl Level) String() string {
+	switch lvl {
+	case LevelDebug:
+		return "[DEBUG]"
+	case LevelInfo:
+		return "[INFO]"
+	case LevelError:
+		return "[ERROR]"
+	default:
+		// Should not happen.
+		return ""
+	}
+}
